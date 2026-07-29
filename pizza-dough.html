@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Dough — Hansen Kitchen</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #fcf9f2; --paper: #f5f0e8; --ink: #3a2c1b; --gold: #c4a97d;
+    --gold-dark: #8b6f47; --muted: #8b7a64; --light: #e5d9c6; --border: #ddd2c0;
+    --header-bg: #f8f4ec; --step-bg: #f3ede3; --cell-active: #f0eadc;
+  }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--paper); padding: 2rem 1rem; display: flex; justify-content: center; }
+  .card { max-width: 720px; width: 100%; background: var(--cream); border: 1px solid var(--light); border-radius: 4px; padding: 2.5rem 2rem 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .crest { text-align: center; margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--light); }
+  .crest .top-line { width: 50px; height: 1px; background: var(--gold-dark); margin: 0 auto 0.6rem; }
+  .crest .label { font-size: 0.45rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-dark); font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .crest .monogram { font-family: 'Georgia', serif; font-size: 2.6rem; font-weight: 700; color: var(--ink); line-height: 1; letter-spacing: 4px; margin: 0.1rem 0; }
+  .crest .names { font-family: 'Georgia', serif; font-size: 0.65rem; color: var(--ink); font-style: italic; }
+  .crest .names .amp { font-style: normal; color: var(--gold); font-size: 0.55rem; }
+  .crest .bottom-line { width: 30px; height: 1px; background: var(--gold-dark); margin: 0.5rem auto; }
+  .crest .year { font-size: 0.45rem; letter-spacing: 3px; color: var(--muted); font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .recipe-header { text-align: center; margin-bottom: 1.5rem; }
+  .recipe-header h1 { font-size: 1.4rem; font-weight: 700; color: var(--ink); letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+  .recipe-meta { display: flex; justify-content: center; gap: 1.5rem; font-size: 0.6rem; color: var(--muted); font-family: -apple-system, 'Helvetica Neue', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+  .recipe-meta span { display: flex; align-items: center; gap: 0.3rem; }
+  .recipe-meta .num { color: var(--ink); font-weight: 600; }
+  .recipe-table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+  .recipe-table { width: 100%; border-collapse: collapse; font-size: 0.6rem; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .recipe-table th, .recipe-table td { border: 1px solid var(--border); padding: 0.35rem 0.4rem; text-align: center; vertical-align: middle; }
+  .recipe-table thead th { background: var(--header-bg); font-weight: 600; color: var(--ink); font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.45rem 0.3rem; }
+  .recipe-table thead th:first-child { text-align: left; background: transparent; border-bottom: 1px solid var(--border); }
+  .recipe-table .ingredient { text-align: left; font-weight: 600; color: var(--ink); white-space: nowrap; padding-right: 0.75rem; background: var(--cream); font-size: 0.55rem; }
+  .recipe-table .ingredient .amount { font-weight: 400; color: var(--muted); font-size: 0.5rem; display: block; margin-top: 1px; }
+  .recipe-table .active { background: var(--cell-active); color: var(--ink); font-size: 0.45rem; }
+  .recipe-table .active .icon { font-size: 0.6rem; display: block; margin-bottom: 1px; }
+  .recipe-table .process-row td { background: var(--step-bg); font-size: 0.45rem; color: var(--muted); font-style: italic; }
+  .recipe-table .process-row .ingredient { font-style: normal; font-weight: 600; color: var(--ink); background: var(--step-bg); }
+  .recipe-table .empty { background: var(--cream); }
+  .instructions { margin-bottom: 1.5rem; }
+  .instructions h2 { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-dark); margin-bottom: 0.6rem; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .instructions p { font-size: 0.8rem; line-height: 1.7; color: var(--ink); text-align: justify; }
+  .instructions p em { color: var(--gold-dark); }
+  .footer { text-align: center; padding-top: 1rem; border-top: 1px solid var(--light); font-size: 0.5rem; color: var(--muted); font-style: italic; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  @media print { body { background: white; padding: 0.5in; } .card { max-width: 100%; box-shadow: none; border: none; padding: 0; } .recipe-table-wrap { overflow-x: visible; } }
+  @media (max-width: 500px) { .card { padding: 1.5rem 1rem; } .recipe-header h1 { font-size: 1.1rem; } .recipe-meta { flex-wrap: wrap; gap: 0.75rem; } .recipe-table { font-size: 0.5rem; } .recipe-table th, .recipe-table td { padding: 0.25rem 0.2rem; } .instructions p { font-size: 0.75rem; } }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="crest">
+    <div class="top-line"></div>
+    <div class="label">The Hansens</div>
+    <div class="monogram">H</div>
+    <div class="names">Bobby <span class="amp">&amp;</span> Cathy</div>
+    <div class="bottom-line"></div>
+    <div class="year">since 2016</div>
+  </div>
+  <div class="recipe-header">
+    <h1>Pizza Dough</h1>
+    <div class="recipe-meta">
+      <span>Small: <span class="num">2 medium pizzas</span></span>
+      <span>Large: <span class="num">3-4 medium or 2 large</span></span>
+      <span>Time: <span class="num">~1 hr 15 min</span></span>
+    </div>
+  </div>
+  <div class="recipe-table-wrap">
+    <table class="recipe-table">
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Bloom Yeast</th>
+          <th>Mix &amp; Knead</th>
+          <th>First Rise</th>
+          <th>Shape</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ingredient">Bread flour<span class="amount">2½ cups (small) / 5 cups (large)</span></td>
+          <td></td>
+          <td class="active"><span class="icon">●</span>Add to mixer</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Warm water<span class="amount">1 cup, 105-115°F</span></td>
+          <td class="active"><span class="icon">●</span>Mix with sugar &amp; yeast</td>
+          <td class="active">Add to flour</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Instant yeast<span class="amount">2¼ tsp (small) / 4½ tsp (large)</span></td>
+          <td class="active">Bloom 10 min until foamy</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Sugar<span class="amount">1 tbsp</span></td>
+          <td class="active">Add to water</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Olive oil<span class="amount">2 tbsp (small) / 3 tbsp (large) + extra</span></td>
+          <td></td>
+          <td class="active">Add to flour</td>
+          <td class="active">Coat bowl</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Salt<span class="amount">¼ tsp (small) / 1 tsp (large)</span></td>
+          <td></td>
+          <td class="active">Add to flour</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="process-row">
+          <td class="ingredient">The dough</td>
+          <td class="active">Yeast blooms 10 min</td>
+          <td class="active">Knead 4-8 min, smooth &amp; slightly sticky</td>
+          <td class="active">Rest 45 min, covered</td>
+          <td class="active">Hand-stretch, no roller</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="instructions">
+    <h2>Instructions</h2>
+    <p>
+      Bloom the yeast by mixing warm water at 105-115°F with sugar, then add the yeast. Let it sit for 10 minutes until it rises and gets foamy. Add olive oil to the flour and mix slightly, then add the yeast mixture in a stand mixer. Knead slowly for 4-8 minutes until the ball is smooth and slightly sticky &mdash; don't overwork it. Rest the dough in an olive oil-coated bowl, covered with a moist cloth, for 45 minutes. Split into dough balls and keep covered until ready to shape. Use your hands, not a roller, to stretch the pizza to your desired thickness &mdash; let the dough do the work. Bread flour beats all-purpose for better chew. Water temperature matters: too hot kills the yeast, too cold won't activate it.
+    </p>
+  </div>
+  <div class="footer">
+    Hansen Family Kitchen &mdash; handwritten with love
+  </div>
+</div>
+</body>
+</html>

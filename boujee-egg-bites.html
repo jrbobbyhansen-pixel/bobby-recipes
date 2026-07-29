@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boujee Egg Bites — Hansen Kitchen</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #fcf9f2; --paper: #f5f0e8; --ink: #3a2c1b; --gold: #c4a97d;
+    --gold-dark: #8b6f47; --muted: #8b7a64; --light: #e5d9c6; --border: #ddd2c0;
+    --header-bg: #f8f4ec; --step-bg: #f3ede3; --cell-active: #f0eadc;
+  }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--paper); padding: 2rem 1rem; display: flex; justify-content: center; }
+  .card { max-width: 720px; width: 100%; background: var(--cream); border: 1px solid var(--light); border-radius: 4px; padding: 2.5rem 2rem 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .crest { text-align: center; margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--light); }
+  .crest .top-line { width: 50px; height: 1px; background: var(--gold-dark); margin: 0 auto 0.6rem; }
+  .crest .label { font-size: 0.45rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-dark); font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .crest .monogram { font-family: 'Georgia', serif; font-size: 2.6rem; font-weight: 700; color: var(--ink); line-height: 1; letter-spacing: 4px; margin: 0.1rem 0; }
+  .crest .names { font-family: 'Georgia', serif; font-size: 0.65rem; color: var(--ink); font-style: italic; }
+  .crest .names .amp { font-style: normal; color: var(--gold); font-size: 0.55rem; }
+  .crest .bottom-line { width: 30px; height: 1px; background: var(--gold-dark); margin: 0.5rem auto; }
+  .crest .year { font-size: 0.45rem; letter-spacing: 3px; color: var(--muted); font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .recipe-header { text-align: center; margin-bottom: 1.5rem; }
+  .recipe-header h1 { font-size: 1.4rem; font-weight: 700; color: var(--ink); letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+  .recipe-meta { display: flex; justify-content: center; gap: 1.5rem; font-size: 0.6rem; color: var(--muted); font-family: -apple-system, 'Helvetica Neue', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+  .recipe-meta span { display: flex; align-items: center; gap: 0.3rem; }
+  .recipe-meta .num { color: var(--ink); font-weight: 600; }
+  .recipe-table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+  .recipe-table { width: 100%; border-collapse: collapse; font-size: 0.6rem; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .recipe-table th, .recipe-table td { border: 1px solid var(--border); padding: 0.35rem 0.4rem; text-align: center; vertical-align: middle; }
+  .recipe-table thead th { background: var(--header-bg); font-weight: 600; color: var(--ink); font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.45rem 0.3rem; }
+  .recipe-table thead th:first-child { text-align: left; background: transparent; border-bottom: 1px solid var(--border); }
+  .recipe-table .ingredient { text-align: left; font-weight: 600; color: var(--ink); white-space: nowrap; padding-right: 0.75rem; background: var(--cream); font-size: 0.55rem; }
+  .recipe-table .ingredient .amount { font-weight: 400; color: var(--muted); font-size: 0.5rem; display: block; margin-top: 1px; }
+  .recipe-table .active { background: var(--cell-active); color: var(--ink); font-size: 0.45rem; }
+  .recipe-table .active .icon { font-size: 0.6rem; display: block; margin-bottom: 1px; }
+  .recipe-table .process-row td { background: var(--step-bg); font-size: 0.45rem; color: var(--muted); font-style: italic; }
+  .recipe-table .process-row .ingredient { font-style: normal; font-weight: 600; color: var(--ink); background: var(--step-bg); }
+  .recipe-table .empty { background: var(--cream); }
+  .instructions { margin-bottom: 1.5rem; }
+  .instructions h2 { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-dark); margin-bottom: 0.6rem; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  .instructions p { font-size: 0.8rem; line-height: 1.7; color: var(--ink); text-align: justify; }
+  .instructions p em { color: var(--gold-dark); }
+  .footer { text-align: center; padding-top: 1rem; border-top: 1px solid var(--light); font-size: 0.5rem; color: var(--muted); font-style: italic; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+  @media print { body { background: white; padding: 0.5in; } .card { max-width: 100%; box-shadow: none; border: none; padding: 0; } .recipe-table-wrap { overflow-x: visible; } }
+  @media (max-width: 500px) { .card { padding: 1.5rem 1rem; } .recipe-header h1 { font-size: 1.1rem; } .recipe-meta { flex-wrap: wrap; gap: 0.75rem; } .recipe-table { font-size: 0.5rem; } .recipe-table th, .recipe-table td { padding: 0.25rem 0.2rem; } .instructions p { font-size: 0.75rem; } }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="crest">
+    <div class="top-line"></div>
+    <div class="label">The Hansens</div>
+    <div class="monogram">H</div>
+    <div class="names">Bobby <span class="amp">&amp;</span> Cathy</div>
+    <div class="bottom-line"></div>
+    <div class="year">since 2016</div>
+  </div>
+  <div class="recipe-header">
+    <h1>Boujee Egg Bites</h1>
+    <div class="recipe-meta">
+      <span>Makes: <span class="num">10 egg bites</span></span>
+      <span>Active: <span class="num">~10 min</span></span>
+      <span>Total: <span class="num">~1 hr 20 min</span></span>
+    </div>
+  </div>
+  <div class="recipe-table-wrap">
+    <table class="recipe-table">
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Blend</th>
+          <th>Fill Jars</th>
+          <th>Sous Vide</th>
+          <th>Top &amp; Serve</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ingredient">Eggs<span class="amount">10</span></td>
+          <td class="active"><span class="icon">●</span>Blend with cottage cheese</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Cottage cheese<span class="amount">16 oz, small curd</span></td>
+          <td class="active">Blend until creamy</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Swiss &amp; Gruyère<span class="amount">8 oz, shredded</span></td>
+          <td></td>
+          <td class="active"><span class="icon">●</span>Stuff into jars</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Bacon bits<span class="amount">to taste</span></td>
+          <td></td>
+          <td class="active">Push into mixture</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Avocado<span class="amount">sliced</span></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="active">Top each bite</td>
+        </tr>
+        <tr>
+          <td class="ingredient">Yellowbird Agave Sriracha<span class="amount">to taste</span></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="active">Drizzle on top</td>
+        </tr>
+        <tr>
+          <td class="ingredient">HEB Sweet Texas Heat<span class="amount">to taste</span></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="active">Sprinkle on top</td>
+        </tr>
+        <tr class="process-row">
+          <td class="ingredient">The jars</td>
+          <td></td>
+          <td class="active">Fill greased 4 oz jars, leave room</td>
+          <td class="active">167°F for 1 hr 10 min</td>
+          <td class="active">Top &amp; enjoy</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="instructions">
+    <h2>Instructions</h2>
+    <p>
+      Blend the eggs, cottage cheese, salt, and pepper until creamy and smooth. Pour the mixture into 10 greased 4-ounce mason jars, leaving a little room at the top. Stuff each jar with shredded Swiss and Gruyère cheese and bacon bits, pushing them down into the egg mixture. Cook in a sous vide bath for 1 hour 10 minutes at 167°F &mdash; lids should be finger-tight only, not sealed, so pressure can release. Top each bite with sliced avocado, a drizzle of Yellowbird Agave Sriracha, and a sprinkle of HEB Sweet Texas Heat Seasoning. The cottage cheese is the secret &mdash; it gives them that silky, custard-like texture that puts Starbucks to shame. You can prep the jars the night before and cook in the morning.
+    </p>
+  </div>
+  <div class="footer">
+    Hansen Family Kitchen &mdash; handwritten with love
+  </div>
+</div>
+</body>
+</html>
