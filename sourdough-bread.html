@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourdough Bread — Hansen Kitchen</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #fcf9f2;
+    --paper: #f5f0e8;
+    --ink: #3a2c1b;
+    --gold: #c4a97d;
+    --gold-dark: #8b6f47;
+    --muted: #8b7a64;
+    --light: #e5d9c6;
+    --border: #ddd2c0;
+    --header-bg: #f8f4ec;
+    --step-bg: #f3ede3;
+    --cell-active: #f0eadc;
+  }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--paper);
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    max-width: 720px;
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid var(--light);
+    border-radius: 4px;
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    position: relative;
+  }
+
+  .crest {
+    text-align: center;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--light);
+  }
+  .crest .top-line {
+    width: 50px;
+    height: 1px;
+    background: var(--gold-dark);
+    margin: 0 auto 0.6rem;
+  }
+  .crest .label {
+    font-size: 0.45rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+  .crest .monogram {
+    font-family: 'Georgia', serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: 4px;
+    margin: 0.1rem 0;
+  }
+  .crest .names {
+    font-family: 'Georgia', serif;
+    font-size: 0.65rem;
+    color: var(--ink);
+    font-style: italic;
+  }
+  .crest .names .amp {
+    font-style: normal;
+    color: var(--gold);
+    font-size: 0.55rem;
+  }
+  .crest .bottom-line {
+    width: 30px;
+    height: 1px;
+    background: var(--gold-dark);
+    margin: 0.5rem auto;
+  }
+  .crest .year {
+    font-size: 0.45rem;
+    letter-spacing: 3px;
+    color: var(--muted);
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+
+  .recipe-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .recipe-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+  }
+  .recipe-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.6rem;
+    color: var(--muted);
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .recipe-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .recipe-meta .num {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .recipe-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .recipe-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.6rem;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+  .recipe-table th,
+  .recipe-table td {
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.4rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .recipe-table thead th {
+    background: var(--header-bg);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.45rem 0.3rem;
+  }
+  .recipe-table thead th:first-child {
+    text-align: left;
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+  }
+  .recipe-table .ingredient {
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    padding-right: 0.75rem;
+    background: var(--cream);
+    font-size: 0.55rem;
+  }
+  .recipe-table .ingredient .amount {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 0.5rem;
+    display: block;
+    margin-top: 1px;
+  }
+  .recipe-table .active {
+    background: var(--cell-active);
+    color: var(--ink);
+    font-size: 0.45rem;
+  }
+  .recipe-table .active .icon {
+    font-size: 0.6rem;
+    display: block;
+    margin-bottom: 1px;
+  }
+  .recipe-table .process-row td {
+    background: var(--step-bg);
+    font-size: 0.45rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .recipe-table .process-row .ingredient {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--step-bg);
+  }
+  .recipe-table .empty {
+    background: var(--cream);
+  }
+
+  .instructions {
+    margin-bottom: 1.5rem;
+  }
+  .instructions h2 {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold-dark);
+    margin-bottom: 0.6rem;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+  .instructions p {
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--ink);
+    text-align: justify;
+  }
+  .instructions p em {
+    color: var(--gold-dark);
+  }
+
+  .footer {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light);
+    font-size: 0.5rem;
+    color: var(--muted);
+    font-style: italic;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+
+  @media print {
+    body { background: white; padding: 0.5in; }
+    .card { max-width: 100%; box-shadow: none; border: none; padding: 0; }
+    .recipe-table-wrap { overflow-x: visible; }
+  }
+
+  @media (max-width: 500px) {
+    .card { padding: 1.5rem 1rem; }
+    .recipe-header h1 { font-size: 1.1rem; }
+    .recipe-meta { flex-wrap: wrap; gap: 0.75rem; }
+    .recipe-table { font-size: 0.5rem; }
+    .recipe-table th, .recipe-table td { padding: 0.25rem 0.2rem; }
+    .instructions p { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="crest">
+    <div class="top-line"></div>
+    <div class="label">The Hansens</div>
+    <div class="monogram">H</div>
+    <div class="names">Bobby <span class="amp">&amp;</span> Cathy</div>
+    <div class="bottom-line"></div>
+    <div class="year">since 2016</div>
+  </div>
+
+  <div class="recipe-header">
+    <h1>Sourdough Bread</h1>
+    <div class="recipe-meta">
+      <span>Yield: <span class="num">1 loaf</span></span>
+      <span>Total: <span class="num">~20 hours</span></span>
+      <span>Bake: <span class="num">475&deg;F</span></span>
+    </div>
+  </div>
+
+  <div class="recipe-table-wrap">
+    <table class="recipe-table">
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Feed Starter</th>
+          <th>Mix Dough</th>
+          <th>Stretch &amp; Fold</th>
+          <th>Bulk Ferment</th>
+          <th>Shape</th>
+          <th>Final Rise</th>
+          <th>Bake</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ingredient">Active starter<span class="amount">~100g ripe</span></td>
+          <td class="active"><span class="icon">●</span>Feed 12pm</td>
+          <td class="active">Mix in</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Bread flour<span class="amount">500g</span></td>
+          <td></td>
+          <td class="active"><span class="icon">●</span>Add dry</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Water<span class="amount">350g, room temp</span></td>
+          <td></td>
+          <td class="active"><span class="icon">●</span>Add &amp; mix</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="ingredient">Salt<span class="amount">10g</span></td>
+          <td></td>
+          <td class="active">Add after autolyse</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <!-- Process rows -->
+        <tr class="process-row">
+          <td class="ingredient">The dough</td>
+          <td></td>
+          <td></td>
+          <td class="active"><span class="icon">●</span>3x, 30 min apart</td>
+          <td class="active">Overnight ~10h</td>
+          <td class="active">Pre-shape + final</td>
+          <td class="active">1.5&ndash;2h room temp</td>
+          <td class="active">Lid on 25 min, off 25 min</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="instructions">
+    <h2>Instructions</h2>
+    <p>
+      <strong>Day before &mdash;</strong> Feed your starter around noon so it peaks by late afternoon. At 5pm, mix the flour, water, and ripe starter until shaggy. Let rest 20&ndash;30 minutes (autolyse), then add the salt and knead it in. Over the next 1.5 hours, do three stretch-and-folds every 30 minutes &mdash; pull the dough up and fold it over itself, rotating the bowl each time. Cover and let bulk ferment at room temperature overnight, about 10 hours.
+    </p>
+    <p>
+      <strong>Bake day &mdash;</strong> At 6am, turn the dough onto a floured surface and pre-shape into a loose round. Rest 20&ndash;30 minutes, then shape tightly and place seam-side up in a floured banneton or bowl. Let it rise at room temperature for 1.5 to 2 hours. With 45 minutes to go, preheat your oven to 475&deg;F with a Dutch oven inside. Turn the dough out onto parchment, score the top, and load into the hot Dutch oven. Bake covered for 25 minutes, then uncover and bake another 20&ndash;25 minutes until deep golden brown. Internal temp should hit 205&ndash;210&deg;F. Cool at least 1 hour before slicing &mdash; the hardest part.
+    </p>
+  </div>
+
+  <div class="footer">
+    Hansen Family Kitchen &mdash; handwritten with love
+  </div>
+
+</div>
+</body>
+</html>
